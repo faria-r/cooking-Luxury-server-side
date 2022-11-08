@@ -18,7 +18,8 @@ app.get('/',(req,res)=>{
 //connecting mongoDB
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.wxeycza.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-const ServiceCollection = client.db('cookingLuxury').collection('services')
+const ServiceCollection = client.db('cookingLuxury').collection('services');
+const reviewCollection = client.db('cookingLuxury').collection('Reviews');
   //creating a async function
 async function run(){
 try{
@@ -42,6 +43,15 @@ app.get('/details/:id',async(req,res)=>{
   const cursor = ServiceCollection.find(query);
   const service = await cursor.toArray();
   res.send(service)
+});
+
+//API to POST Review Data on Database
+
+app.post('/reviews',async(req,res)=>{
+  const reviews= req.body;
+  const result = await reviewCollection.insertOne(reviews);
+  res.send(result)
+
 })
 }
 finally{
