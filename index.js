@@ -61,6 +61,25 @@ app.get('/review/:id',async(req,res)=>{
   const cursor = reviewCollection.find(query);
   const review = await cursor.toArray();
   res.send(review)
+});
+
+//API to get review according to specific user
+app.get('/myReviews',async(req,res)=>{
+  const email = req.query.email;
+  const query = {email:email};
+  const cursor = reviewCollection.find(query);
+  const result = await cursor.toArray();
+  console.log(result);
+  res.send(result)
+});
+
+//API to delete a review
+app.delete('/delete/:id',async(req,res)=>{
+  const id = req.params.id;
+  const query = {_id:ObjectId(id)};
+  const result = await reviewCollection.deleteOne(query);
+  console.log(result)
+  res.send(result)
 })
 }
 finally{
