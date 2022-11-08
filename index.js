@@ -52,6 +52,15 @@ app.post('/reviews',async(req,res)=>{
   const result = await reviewCollection.insertOne(reviews);
   res.send(result)
 
+});
+
+//API to get All Review
+app.get('/review/:id',async(req,res)=>{
+  const id = req.params.id;
+  const query ={id};
+  const cursor = reviewCollection.find(query);
+  const review = await cursor.toArray();
+  res.send(review)
 })
 }
 finally{
