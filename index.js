@@ -20,6 +20,7 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@clu
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 const ServiceCollection = client.db('cookingLuxury').collection('services');
 const reviewCollection = client.db('cookingLuxury').collection('Reviews');
+const OffersCollection = client.db('cookingLuxury').collection('Offers');
   //creating a async function
 async function run(){
 try{
@@ -54,6 +55,21 @@ app.post('/reviews',async(req,res)=>{
 
 });
 
+//api to insert new service to database
+app.post('/services',async(req,res)=>{
+  const query= req.body;
+  const result = await ServiceCollection.insertOne(query);
+  res.send(result)
+});
+//API to get Offers
+app.get('/offers',async(req,res)=>{
+  const query ={};
+  const cursor = OffersCollection.find(query);
+  const result =await cursor.toArray();
+  res.send(result);
+  console.log(result)
+})
+
 //API to get All Review
 app.get('/review/:id',async(req,res)=>{
   const id = req.params.id;
@@ -72,7 +88,24 @@ app.get('/myReviews',async(req,res)=>{
   console.log(result);
   res.send(result)
 });
+//API to Update Review
+app.patch('/reviews/:id',async(req,res)=>{
+  const id = req.params.id;
+  console.log(id)
+  const changes = req.body;
+  const query= {_id:ObjectId(id)};
+  const updatedDoc = {
+    $set:{
+      name:changes.name,
+    photo:changes.photo,
+    review:changes.review,
+    }
+  };
+  const result = await reviewCollection.updateOne(query,updatedDoc);
+  console.log(result)
+  res.send(result);
 
+})
 //API to delete a review
 app.delete('/delete/:id',async(req,res)=>{
   const id = req.params.id;
