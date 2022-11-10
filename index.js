@@ -103,7 +103,7 @@ app.get('/offers',async(req,res)=>{
 app.get('/review/:id',async(req,res)=>{
   const id = req.params.id;
   const query ={id};
-  const sort = {Date : -1};
+  const sort = {time : -1};
   const cursor = reviewCollection.find(query).sort(sort);
   const review = await cursor.toArray();
   res.send(review)
