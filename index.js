@@ -116,7 +116,7 @@ app.get('/reviews/:id',async(req,res)=>{
   const review = await cursor.toArray();
   res.send(review)
 });
-//API to get review according to specific user
+//API to get review according to specific users
 app.get('/myReviews', verifyJWT, async(req,res)=>{
   // console.log(req.headers.authorization)
   const decoded = req.decoded;
